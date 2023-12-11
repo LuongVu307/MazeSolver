@@ -254,24 +254,23 @@ def RanKruskal(grid_cell, set_cell):
     next_cell = current_cell.check_neighbor(grid_cell)
     next_choice = grid_cell.index(next_cell)
     first, second = None, None
-    if next_cell:
-      for i in range(len(set_cell)):
-        if choice in set_cell[i]:
-          first = i
-        if next_choice in set_cell[i]:
-          second = i
+    for i in range(len(set_cell)):
+      if choice in set_cell[i]:
+        first = i
+      if next_choice in set_cell[i]:
+        second = i
 
     if first != second:
-      print(first, second)
-      #print(set_cell[first], set_cell[second], "NEW")
+      current_cell.draw_current()
+      next_cell.draw_current()
+      rm_walls(current_cell, next_cell)
       new_cell = set_cell[first] | set_cell[second]
-      #print("NEW", new_cell)
       set_cell[first] = new_cell
       set_cell.pop(second)
-      rm_walls(current_cell, next_cell)
       break
 
-  print(set_cell)
+  
+
   return set_cell
           
             
