@@ -248,29 +248,30 @@ def BinaryTree(current_cell, grid_cell, cols):
 
 
 def RanKruskal(grid_cell, set_cell):
-  #print(grid_cell)
-  print("running")
   while True:
-    valid = False
     choice = random.randint(0, len(grid_cell)-1)
     current_cell = grid_cell[choice]
     next_cell = current_cell.check_neighbor(grid_cell)
+    next_choice = grid_cell.index(next_cell)
+    first, second = None, None
     if next_cell:
       for i in range(len(set_cell)):
-        if (current_cell in set_cell[i] or next_cell in set_cell[i]) and not (next_cell in set_cell[i] and current_cell in set_cell[i]):
-          set_cell[i].add(next_cell)
-          set_cell[i].add(current_cell)
-          rm_walls(current_cell, next_cell)        
-          valid = True
-          break
-        
-    if valid is False:
-      set_cell.append(set([current_cell, next_cell]))
-      valid = True
+        if choice in set_cell[i]:
+          first = i
+        if next_choice in set_cell[i]:
+          second = i
 
-    if valid is True:
+    if first != second:
+      print(first, second)
+      #print(set_cell[first], set_cell[second], "NEW")
+      new_cell = set_cell[first] | set_cell[second]
+      #print("NEW", new_cell)
+      set_cell[first] = new_cell
+      set_cell.pop(second)
+      rm_walls(current_cell, next_cell)
       break
-  print("DONE")
 
-  
+  print(set_cell)
   return set_cell
+          
+            
