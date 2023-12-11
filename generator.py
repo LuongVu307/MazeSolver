@@ -7,7 +7,7 @@ from algorithm import Cell, RanDFS, RanPrims, Eller, HuntKill, BinaryTree, RanKr
 pygame.init()
 
 WIDTH, HEIGHT = 402, 302
-TILE = 10
+TILE = 50
 rows, cols = HEIGHT // TILE, WIDTH // TILE
 
 FPS = 60
@@ -36,7 +36,7 @@ grid_cell = [Cell(col, row, TILE, screen, cols, rows) for row in range(rows) for
 #current_cell = grid_cell[0]
 
 current_cell = grid_cell[0]
-set_cell = []
+set_cell = [set([i]) for i in range(len(grid_cell))]
 
 running = True
 while running:
@@ -59,8 +59,8 @@ while running:
   #current_cell = HuntKill(current_cell, grid_cell)
 
   #current_cell = BinaryTree(current_cell, grid_cell, cols)
-
   set_cell = RanKruskal(grid_cell, set_cell)
 
   pygame.display.flip()
+
   clock.tick(FPS)
