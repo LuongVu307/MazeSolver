@@ -151,7 +151,7 @@ def Eller(grid_cell, rows, cols, count, set_cell):
       ls.append(set([cols*(count + 1) - 1]))
 
     merged_sets = []
-    
+
     for set1 in set_cell:
       merged = False
 
@@ -183,10 +183,10 @@ def Eller(grid_cell, rows, cols, count, set_cell):
     while True:
       num_set = random.randint(0, len(ls) - 1)
       set_chosen = ls[num_set]
-  
+
       num_chosen = random.choice(list(set_chosen))
       cell_chosen = grid_cell[num_chosen]
-  
+
       next_cell = cell_chosen.check_neighbor(grid_cell)
       if next_cell and grid_cell.index(next_cell) not in set_chosen:
         rm_walls(cell_chosen, next_cell)
@@ -211,7 +211,7 @@ def Eller(grid_cell, rows, cols, count, set_cell):
             merged_sets.append(new_set.copy())
 
     return merged_sets
-        
+
 
 def HuntKill(current_cell, grid_cell):
   current_cell.visited = True
@@ -232,7 +232,7 @@ def HuntKill(current_cell, grid_cell):
           break
 
   return current_cell
-  
+
 
 def BinaryTree(current_cell, grid_cell, cols):
   current_cell.visited = True
@@ -248,23 +248,29 @@ def BinaryTree(current_cell, grid_cell, cols):
 
 
 def RanKruskal(grid_cell, set_cell):
-  print(grid_cell)
-  choice = random.randint(0, len(grid_cell)-1)
+  #print(grid_cell)
+  print("running")
   while True:
-    valid = True
-    cells = set()
-    if grid_cell[choice].visited is False:
-      for cell in set_cell:
-        if grid_cell[choice] in cell:
-          valid = False
+    valid = False
+    choice = random.randint(0, len(grid_cell)-1)
+    current_cell = grid_cell[choice]
+    next_cell = current_cell.check_neighbor(grid_cell)
+    if next_cell:
+      for i in range(len(set_cell)):
+        if (current_cell in set_cell[i] or next_cell in set_cell[i]) and not (next_cell in set_cell[i] and current_cell in set_cell[i]):
+          set_cell[i].add(next_cell)
+          set_cell[i].add(current_cell)
+          rm_walls(current_cell, next_cell)        
+          valid = True
           break
-      if valid == True:
-        for _ in range(3):
-          current_cell = grid_cell[choice]
-          current_cell.draw_current()
-          current_cell = current_cell.check_neighbor(grid_cell)
-          cells.add(current_cell)
-          break
-      
-  set_cell.append(cells)
+        
+    if valid is False:
+      set_cell.append(set([current_cell, next_cell]))
+      valid = True
+
+    if valid is True:
+      break
+  print("DONE")
+
+  
   return set_cell
