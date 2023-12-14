@@ -10,11 +10,15 @@ class Cell:
     self.cols = cols
     self.rows = rows
     self.visited = False
+    self.bias = 10
     self.x, self.y = x, y
     self.walls = {"right": True, "left": True, "top": True, "bottom": True}
 
   def draw(self):
     x, y = self.x * self.TILE, self.TILE * self.y
+
+    x += self.bias
+    y += self.bias
 
     if self.visited:
       pygame.draw.rect(self.screen, pygame.Color("black"), (x, y, self.TILE, self.TILE))
@@ -34,6 +38,9 @@ class Cell:
 
   def draw_current(self):
     x, y = self.x * self.TILE, self.TILE * self.y
+
+    x += self.bias
+    y += self.bias
 
     pygame.draw.rect(self.screen, pygame.Color("brown"), (x, y, self.TILE, self.TILE))
 
