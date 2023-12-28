@@ -1,7 +1,5 @@
 import pygame
-import random
 import sys
-import os
 from algorithm import Cell, RanDFS, RanPrims, Eller, HuntKill, BinaryTree, RanKruskal
 
 pygame.init()
@@ -59,7 +57,8 @@ def draw_menu(page):
 def draw_text(screen, text, font, color, position):
   text_surface = font.render(text, True, color)
   text_rect = text_surface.get_rect()
-  text_rect.center = position
+  text_rect.left = position[1]
+  text_rect.centery = position[0]
   screen.blit(text_surface, text_rect)
 
 
@@ -147,27 +146,41 @@ def main():
         current_cell = grid_cell[0]
       state = "maze"
       start_time = pygame.time.get_ticks()
-
+      steps = 0
     elif state == "maze":
+      steps += 1
       [cells.draw() for cells in grid_cell]
-      draw_text(screen, "TIME: ", pygame.font.Font(None, 24),
-                pygame.Color("Black"), (40, 30))
-      draw_text(screen, "{:.2f}".format(
-          (pygame.time.get_ticks() - start_time) / 1000),
-                pygame.font.Font(None, 24), pygame.Color("Black"), (100, 30))
+      draw_text(screen,
+                f"TIME: {(pygame.time.get_ticks() - start_time) / 1000}",
+                pygame.font.Font(None, 24), pygame.Color("Red"), (40, 30))
+      draw_text(screen, f"STEPS: {steps}", pygame.font.Font(None, 24),
+                pygame.Color("Red"), (70, 30))
       if maze_type == "DFS":
         current_cell, stack = RanDFS(current_cell, stack, grid_cell)
+        if not stack:
+          state = "end maze"
       elif maze_type == "Kruskal":
         set_cell = RanKruskal(grid_cell, list(set_cell))
+        if not set_cell:
+          state = "end maze"
       elif maze_type == "Prims":
-        RanPrims(grid_cell)
+        grid_cell = RanPrims(list(grid_cell))
+        if not grid_cell:
+          state = "end maze"
       elif maze_type == "Eller":
         set_cell = Eller(grid_cell, rows, cols, count, set_cell)
         count += 1
+        if not set_cell:
+          state = "end maze"
       elif maze_type == "HuntKill":
         current_cell = HuntKill(current_cell, grid_cell)
-      elif maze_type == "Binary":
+        if current_cell == False:
+          maze_type = "end maze"
+      elif state == "Binary":
         current_cell = BinaryTree(current_cell, grid_cell, cols)
+        print(current_cell)
+    elif state == "end maze":
+      pass
 
     pygame.display.flip()
 
@@ -176,4 +189,3 @@ def main():
 
 if __name__ == "__main__":
   main()
-
